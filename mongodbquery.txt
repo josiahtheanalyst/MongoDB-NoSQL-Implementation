@@ -6,3 +6,51 @@ db.paris.find({"category":"accommodation"})
 
 db.paris.find({"contact.phone":{"$exists": true}}, {"name":1, "contact.phone":1, "_id":0 })
 
+##Name and contacts of places with” website” and” Foursquare” provided: this was solved by using the code:##
+
+db.paris.find({"contact.website":{"$exists": true}, "contact.Foursquare":{"$ne": null}}, {"name":1, "_id":0, "contact":1})
+
+
+##Name of places whose name contains the word “hotel” (pay attention to case): below was the code that was applied to retrieve these documents:##
+
+db.paris.find({"name": {"$regex": "hotel"}}, {"name":1,  "_id":0})
+
+
+##Name and services of places offering 5 services: The code used to retrieve these document for the paris collection was:##
+db.paris.find({"services":{"$size":5}}, {"name": 1, "services":1})
+
+
+##Categories of places with at least a rating (reviews.rating) of 4 or more: The code that was used for this was:##
+
+db.paris.distinct("category", {"reviews.rating": {"$gte": 4}})
+
+##GPS coordinates of places whose address contains “rue de rome".##
+
+db.paris.find({"location.address":{"$regex":"rue de rome"}},{"location.coord":1})
+db.paris.find({"location.address":{"$regex":"rue de Rome"}},{"location.coord":1})
+db.paris.find({"location.address":{"$regex":"Rue de Rome"}},{"location.coord":1}
+
+
+##Distinct list of categories: The code used to retrieve this document was:##
+
+db.paris.distinct("category")
+
+
+
+##Distinct list of services: To retrieve this document, two codes cab used. Each code will return the same set of documents however, the first code returned an output which contains null. This is not the desired result##
+
+db.paris.distinct("services")
+db.paris.distinct("services", {"services":{"$ne": null}})
+
+
+##For each ”poi” category place name, give the number of reviews whose source (reviews.source) is “Facebook”. Sort in descending order:##
+
+db.paris.aggregate([{$match: { category: "poi" }},{$project: {_id: 0, name: 1, category: 1, num_facebook_reviews: {$size: { $filter: {input: "$reviews", as: "review", cond: { $eq: ["$$review.source", "Facebook"] }}}}}},{$sort: { num_facebook_reviews: -1 }}])
+
+
+
+
+
+
+
+

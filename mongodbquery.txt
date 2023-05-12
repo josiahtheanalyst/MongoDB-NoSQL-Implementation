@@ -1,0 +1,8 @@
+##Give the name of the places whose category is “accommodation”: The query used to retrieve this documents was:##
+
+db.paris.find({"category":"accommodation"})
+
+##Give the name and phone number of places with a phone number entered: The code used to retrieve these documents was:##
+
+db.paris.find({"contact.phone":{"$exists": true}}, {"name":1, "contact.phone":1, "_id":0 })
+
